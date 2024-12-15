@@ -21,6 +21,8 @@ export interface Employee extends Document {
     address: {
       present: string;
       permanent: string;
+      presentPinCode: string;
+      permanentPinCode: string;
     };
   };
   emergencyContact: {
@@ -56,10 +58,19 @@ export interface Employee extends Document {
     dob: string;
     relationship: string;
   }[];
-  pdfPath: string;
+  pdfPaths: {
+    form1: string;
+    form2: string;
+  };
+  fatherName: string; // Added
+  spouseName: string; // Added
+  caste: string; // Added
+  category: string; // Added
+  bloodGroup: string; // Added
+  residence: string; // Added
 }
 
-const EmployeeSchema = new Schema<Employee>({
+const EmployeeSchema = new Schema({
   name: { type: String, required: true },
   gender: { type: String, enum: ['Male', 'Female'], required: true },
   dob: { type: String, required: true },
@@ -71,6 +82,8 @@ const EmployeeSchema = new Schema<Employee>({
     address: {
       present: { type: String, required: true },
       permanent: { type: String, required: true },
+      presentPinCode: { type: String, required: true },
+      permanentPinCode: { type: String, required: true },
     },
   },
   emergencyContact: {
@@ -110,7 +123,16 @@ const EmployeeSchema = new Schema<Employee>({
       relationship: { type: String, required: true },
     },
   ],
-  pdfPath: { type: String, required: true },
+  pdfPaths: {
+    form1: { type: String, default: '' },
+    form2: { type: String, default: '' },
+  },
+  fatherName: { type: String, default: '' }, // Added
+  spouseName: { type: String, default: '' }, // Added
+  caste: { type: String, default: '' }, // Added
+  category: { type: String, default: '' }, // Added
+  bloodGroup: { type: String, default: '' }, // Added
+  residence: { type: String, default: '' }, // Added
 });
 
 export const EmployeeModel = mongoose.model<Employee>('Employee', EmployeeSchema);
