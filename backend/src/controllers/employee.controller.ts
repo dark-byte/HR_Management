@@ -19,7 +19,7 @@ export async function createEmployee(req: Request, res: Response) {
       // Generate PDFs for the employee
       const { form1Path, form2Path } = await generatePDF(employee);
       // Save the PDF paths back to the database
-      employee.pdfPaths = { form1: form1Path, form2: form2Path };
+      employee.pdfPaths = { form1Path: form1Path, form2Path: form2Path };
       console.log(employee)
       await employee.save();
 
@@ -123,7 +123,7 @@ export async function updateEmployee(req: Request, res: Response) {
 
     // Regenerate the PDF with updated data
     const { form1Path, form2Path } = await generatePDF(employee);
-    employee.pdfPaths = { form1: form1Path, form2: form2Path };
+    employee.pdfPaths = { form1Path: form1Path, form2Path: form2Path };
 
     // Save the updated PDF path to the database
     await employee.save();

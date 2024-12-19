@@ -15,59 +15,88 @@ export interface Employee extends Document {
   dob: string;
   age: number;
   maritalStatus: 'Married' | 'Unmarried';
+  academicQualification: string;
+  dateOfJoining: string;
+  designation: string;
+  department: Department;
   contact: {
-    mobile: string;
-    email: string;
-    address: {
-      present: string;
-      permanent: string;
-      presentPinCode: string;
-      permanentPinCode: string;
-    };
-  };
-  emergencyContact: {
-    name: string;
-    mobile: string;
+    presentAddress: string;
+    presentPinCode: string;
+    presentContactNumber: string;
+    permanentAddress: string;
+    permanentPinCode: string;
+    permanentContactNumber: string;
+    emailId: string;
   };
   bankDetails: {
     accountNumber: string;
     branch: string;
     ifsc: string;
   };
-  aadhar: string;
-  pan: string;
-  uan: string;
-  designation: string;
-  department: Department;
-  dateOfJoining: string;
-  experience: {
-    teaching: number;
-    industry: number;
-    research: number;
+  emergencyContact: {
+    name: string;
+    phoneNumber: string;
   };
-  qualifications: {
-    type: string;
-    year: number;
+  reference: string[];
+  fatherName: string;
+  spouseName: string;
+  caste: string;
+  category: string;
+  bloodGroup: string;
+  experienceInYears: number;
+  researchPapersPublished: number;
+  guestLectures: number;
+  sslc: {
+    yearOfPassing: number;
+    percentage: number;
+    boardOrUniversity: string;
+  };
+  puc: {
+    yearOfPassing: number;
+    percentage: number;
+    boardOrUniversity: string;
+  };
+  ug: {
+    courseName: string;
+    yearOfPassing: number;
+    percentage: number;
+    boardOrUniversity: string;
+  };
+  pg: {
+    courseName: string;
+    yearOfPassing: number;
+    percentage: number;
+    boardOrUniversity: string;
+  };
+  phd: {
+    university: string;
+    dateOfCompletion: string;
+    specialization: string;
+  };
+  others: {
+    yearOfPassing: number;
     percentage: number;
     boardOrUniversity: string;
   }[];
-  publications: number;
-  guestLectures: number;
+  experiences: {
+    institutionName: string;
+    designation: string;
+    from: string;
+    to: string;
+    totalPeriod: string;
+  }[];
   familyDetails: {
     name: string;
     dob: string;
-    relationship: string;
+    relationship: 'Spouse' | 'Father' | 'Mother' | 'Son' | 'Daughter';
   }[];
+  panNumber: string;
+  aadharNumber: string;
+  uanNumber: string;
   pdfPaths: {
-    form1: string;
-    form2: string;
-  };
-  fatherName: string; // Added
-  spouseName: string; // Added
-  caste: string; // Added
-  category: string; // Added
-  bloodGroup: string; // Added
-  residence: string; // Added
+    form1Path: string,
+    form2Path: string,
+  }
 }
 
 const EmployeeSchema = new Schema({
@@ -76,63 +105,98 @@ const EmployeeSchema = new Schema({
   dob: { type: String, required: true },
   age: { type: Number, required: true },
   maritalStatus: { type: String, enum: ['Married', 'Unmarried'], required: true },
+  academicQualification: { type: String, required: true },
+  dateOfJoining: { type: String, required: true },
+  designation: { type: String, required: true },
+  department: { type: String, enum: Object.values(Department), required: true },
   contact: {
-    mobile: { type: String, required: true },
-    email: { type: String, required: true },
-    address: {
-      present: { type: String, required: true },
-      permanent: { type: String, required: true },
-      presentPinCode: { type: String, required: true },
-      permanentPinCode: { type: String, required: true },
-    },
-  },
-  emergencyContact: {
-    name: { type: String, required: true },
-    mobile: { type: String, required: true },
+    presentAddress: { type: String, required: true },
+    presentPinCode: { type: String, required: true },
+    presentContactNumber: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    permanentPinCode: { type: String, required: true },
+    permanentContactNumber: { type: String, required: true },
+    emailId: { type: String, required: true },
   },
   bankDetails: {
     accountNumber: { type: String, required: true },
     branch: { type: String, required: true },
     ifsc: { type: String, required: true },
   },
-  aadhar: { type: String, required: true },
-  pan: { type: String, required: true },
-  uan: { type: String, required: true },
-  designation: { type: String, required: true },
-  department: { type: String, enum: Object.values(Department), required: true },
-  dateOfJoining: { type: String, required: true },
-  experience: {
-    teaching: { type: Number, required: true },
-    industry: { type: Number, required: true },
-    research: { type: Number, required: true },
+  emergencyContact: {
+    name: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
   },
-  qualifications: [
+  reference: [{ type: String, required: true }],
+  fatherName: { type: String, required: true },
+  spouseName: { type: String, default: '' },
+  caste: { type: String, default: '' },
+  category: { type: String, default: '' },
+  bloodGroup: { type: String, default: '' },
+  experienceInYears: { type: Number, required: true },
+  researchPapersPublished: { type: Number, default: 0 },
+  guestLectures: { type: Number, default: 0 },
+  sslc: {
+    yearOfPassing: { type: Number, required: true },
+    percentage: { type: Number, required: true },
+    boardOrUniversity: { type: String, required: true },
+  },
+  puc: {
+    yearOfPassing: { type: Number, required: true },
+    percentage: { type: Number, required: true },
+    boardOrUniversity: { type: String, required: true },
+  },
+  ug: {
+    courseName: { type: String, required: true },
+    yearOfPassing: { type: Number, required: true },
+    percentage: { type: Number, required: true },
+    boardOrUniversity: { type: String, required: true },
+  },
+  pg: {
+    courseName: { type: String, required: true },
+    yearOfPassing: { type: Number, required: true },
+    percentage: { type: Number, required: true },
+    boardOrUniversity: { type: String, required: true },
+  },
+  phd: {
+    university: { type: String, default: '' },
+    dateOfCompletion: { type: String, default: '' },
+    specialization: { type: String, default: '' },
+  },
+  others: [
     {
-      type: { type: String, required: true },
-      year: { type: Number, required: true },
-      percentage: { type: Number, required: true },
-      boardOrUniversity: { type: String, required: true },
+      yearOfPassing: { type: Number, default: 0 },
+      percentage: { type: Number, default: 0 },
+      boardOrUniversity: { type: String, default: '' },
     },
   ],
-  publications: { type: Number, required: true },
-  guestLectures: { type: Number, required: true },
+  experiences: [
+    {
+      institutionName: { type: String, required: true },
+      designation: { type: String, required: true },
+      from: { type: String, required: true },
+      to: { type: String, required: true },
+      totalPeriod: { type: String, required: true },
+    },
+  ],
   familyDetails: [
     {
       name: { type: String, required: true },
       dob: { type: String, required: true },
-      relationship: { type: String, required: true },
+      relationship: {
+        type: String,
+        enum: ['Spouse', 'Father', 'Mother', 'Son', 'Daughter'],
+        required: true,
+      },
     },
   ],
+  panNumber: { type: String, required: true },
+  aadharNumber: { type: String, required: true },
+  uanNumber: { type: String, required: true },
   pdfPaths: {
-    form1: { type: String, default: '' },
-    form2: { type: String, default: '' },
-  },
-  fatherName: { type: String, default: '' }, // Added
-  spouseName: { type: String, default: '' }, // Added
-  caste: { type: String, default: '' }, // Added
-  category: { type: String, default: '' }, // Added
-  bloodGroup: { type: String, default: '' }, // Added
-  residence: { type: String, default: '' }, // Added
+    form1Path: {type: String},
+    form2Path: {type: String},
+  }
 });
 
 export const EmployeeModel = mongoose.model<Employee>('Employee', EmployeeSchema);
